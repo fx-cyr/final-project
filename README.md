@@ -9,3 +9,4 @@ MVP DEFINED BELOW:
 3) A user can visualize savings and budget usage by categoriy (Car, apartment/house, groceries, pharmacy, etc.)
 4) A user can add reccurent billing reminders
 5) A user can track progress over month (living + or - % over or under budget)
+6) A user can add transactions that translate in real-time towards their budget
