@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { expenseCategories } from "../data";
+import { transactionType } from "../data";
 import { colorSet } from "../styles/Colors";
 import Modal from "react-modal";
+import { addTransactionItem } from "../actions";
+import { useDispatch } from "react-redux";
 
-const Form = ({ showModal }) => {
+const Form = ({ showModal, setShowModal, allTransactions }) => {
+  const dispatch = useDispatch();
+  const [type, setType] = useState(null);
   const [expenseCategory, setExpenseCategory] = useState("");
   const [expenseAmount, setExpenseAmount] = useState(0);
   const [expenseDate, setExpenseDate] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  console.log(showModal);
+  console.log(expenseCategory);
 
   const handleChange = (state, ev) => {
     state(ev.target.value);
@@ -19,6 +24,32 @@ const Form = ({ showModal }) => {
 
   const handleSubmit = () => {
     setIsFormValid(true);
+    fetch("api/transactions", {
+      method: "post",
+      body: JSON.stringify({
+        type: type,
+        amount: expenseAmount,
+        category: expenseCategory,
+        date: expenseDate,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        allTransactions.push(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   let checkIfValid = (ev) => {
@@ -71,6 +102,25 @@ const Form = ({ showModal }) => {
         <Wrapper>
           <Title>Add new expense</Title>
           <FormWrapper>
+            <RadioContainer>
+              {transactionType.map((tranType) => {
+                return (
+                  <Label for={`${tranType.id}`}>
+                    {tranType.name}{" "}
+                    <Input
+                      type="radio"
+                      id={`${tranType.id}`}
+                      name="type"
+                      value={`${tranType.id}`}
+                      onChange={(ev) => {
+                        handleChange(setType, ev);
+                        setExpenseCategory("income");
+                      }}
+                    />
+                  </Label>
+                );
+              })}
+            </RadioContainer>
             <Label>
               Amount ($):{" "}
               <input
@@ -79,27 +129,29 @@ const Form = ({ showModal }) => {
                 step="0.01"
                 onChange={(ev) => {
                   handleChange(setExpenseAmount, ev);
+                  console.log(expenseAmount);
                 }}
               />{" "}
             </Label>
-            <Label for="categories">
-              Category:
-              <select
-                id="categories"
-                name="categories"
-                onChange={(ev) => {
-                  handleChange(setExpenseCategory, ev);
-                  console.log(expenseCategory);
-                }}
-              >
-                <option disabled>Select expense category</option>
-                {expenseCategories.map((category) => {
-                  return (
-                    <option value={`${category.id}`}>{category.name}</option>
-                  );
-                })}
-              </select>
-            </Label>
+            {type === "expense" && (
+              <Label for="categories">
+                Category:
+                <select
+                  onChange={(ev) => {
+                    handleChange(setExpenseCategory, ev);
+                    console.log(expenseCategory);
+                  }}
+                >
+                  <option disabled>Select expense category</option>
+                  {expenseCategories.map((category) => {
+                    return (
+                      <option value={`${category.id}`}>{category.name}</option>
+                    );
+                  })}
+                </select>
+              </Label>
+            )}
+
             <Label>
               Date:{" "}
               <input
@@ -127,6 +179,7 @@ const Form = ({ showModal }) => {
             <Button type="submit" onClick={checkIfValid}>
               Submit
             </Button>
+            <Button onClick={handleCloseModal}>Cancel</Button>
           </FormWrapper>
         </Wrapper>
       </Modal>
@@ -169,5 +222,12 @@ const ErrorBox = styled.div`
   margin: 15px 0;
   width: 50%;
 `;
+
+const RadioContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const Input = styled.input``;
 
 export default Form;

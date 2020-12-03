@@ -3,7 +3,7 @@ export const colorSet = {
   primaryYellow: "#FCA311",
   primaryNavy: "#14213D",
   primaryGrey: "#E5E5E5",
-  primaryRed: "F94144",
+  primaryRed: "#F94144",
   primaryGreen: "#90BE6D",
   primaryWhite: "#FFFFFF",
 };

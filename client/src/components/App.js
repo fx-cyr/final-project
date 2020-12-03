@@ -15,9 +15,9 @@ function App() {
   return (
     <Router>
       <GlobalStyles />
-      <Header />
-      <Switch>
-        <AppContainer>
+      <AppContainer>
+        <Header />
+        <Switch>
           <Route exact path="/">
             <Redirect to="/" />
           </Route>
@@ -26,12 +26,15 @@ function App() {
               <Transactions />
             </div>
           </Route>
-        </AppContainer>
-      </Switch>
+        </Switch>
+      </AppContainer>
     </Router>
   );
 }
 
-const AppContainer = styled.div``;
+const AppContainer = styled.div`
+  height: 100vh;
+  background-color: black;
+`;
 
 export default App;

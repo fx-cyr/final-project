@@ -8,3 +8,8 @@ export const expenseCategories = [
   { id: "leasure", name: "Leasure" },
   { id: "other", name: "Other" },
 ];
+
+export const transactionType = [
+  { id: "expense", name: "Expense" },
+  { id: "income", name: "Income" },
+];
