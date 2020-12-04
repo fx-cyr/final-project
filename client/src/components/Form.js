@@ -68,6 +68,7 @@ const Form = ({ showModal, setShowModal, allTransactions }) => {
     }
     setErrorMsg(null);
     handleSubmit();
+    handleCloseModal();
   };
 
   return (

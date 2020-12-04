@@ -5,24 +5,11 @@ import { MdAddCircleOutline } from "react-icons/md";
 import Form from "./Form";
 import { getStoreItemArray } from "../transactionReducer";
 import TransactionItem from "./TransactionItem";
+import { useTransaction } from "../contexts/transactionContext";
 
 const Transactions = () => {
+  const { allTransactions, setAllTransactions } = useTransaction();
   const [showModal, setShowModal] = useState(false);
-  const [allTransactions, setAllTransactions] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/transactions", {
-      method: "get",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => {
-        console.log(res);
-        return res.json();
-      })
-      .then((json) => {
-        setAllTransactions(json.data);
-      });
-  }, [setAllTransactions]);
   const handleAddIncome = () => {
     window.alert("Now add income source");
   };

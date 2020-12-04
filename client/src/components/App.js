@@ -10,6 +10,7 @@ import {
   Redirect,
 } from "react-router-dom";
 import Transactions from "./Transactions";
+import Dashboard from "./Dashboard";
 
 function App() {
   return (
@@ -20,6 +21,11 @@ function App() {
         <Switch>
           <Route exact path="/">
             <Redirect to="/" />
+          </Route>
+          <Route path="/dashboard">
+            <div>
+              <Dashboard />
+            </div>
           </Route>
           <Route path="/transactions">
             <div>

@@ -4,6 +4,7 @@ import App from "./components/App";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { transactionsReducer } from "./transactionReducer";
+import { TransactionProvider } from "./contexts/transactionContext";
 
 const store = createStore(
   transactionsReducer,
@@ -12,9 +13,11 @@ const store = createStore(
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <TransactionProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </TransactionProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

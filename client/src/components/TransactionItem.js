@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { colorSet } from "../styles/Colors";
 
 const TransactionItem = ({ item }) => {
-  const itemType = item.type;
+  const isIncome = item.type === "income";
   return (
     <Wrapper>
       <TransactionType>
@@ -48,7 +48,7 @@ const TransactionType = styled.h1`
 
 const Color = styled.span`
   // WIP
-  color: ${(itemType) => (itemType == "expense" ? "darkred" : "limegreen")};
+  color: ${(isIncome) => (isIncome ? "darkred" : "limegreen")};
 `;
 
 export default TransactionItem;
