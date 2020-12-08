@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-export const TransactionContext = createContext(null);
+export const TransactionContext = createContext({ allTransactions: [] });
 
 export const TransactionProvider = ({ children }) => {
   const [allTransactions, setAllTransactions] = useState([]);
@@ -14,7 +14,12 @@ export const TransactionProvider = ({ children }) => {
         return res.json();
       })
       .then((json) => {
-        setAllTransactions(json.data);
+        if (json.data) {
+          setAllTransactions(json.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }, [setAllTransactions]);
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Header from "./Header";
 import { GlobalStyles } from "../styles/GlobalStyles";
 import { colorSet } from "../styles/Colors";
@@ -11,13 +11,18 @@ import {
 } from "react-router-dom";
 import Transactions from "./Transactions";
 import Dashboard from "./Dashboard";
+import { FirebaseContext } from "../contexts/firebaseContext";
+import { app } from "firebase";
+import Budget from "./Budget";
 
 function App() {
+  const { signInWithGoogle } = useContext(FirebaseContext);
   return (
     <Router>
       <GlobalStyles />
       <AppContainer>
         <Header />
+        <button onClick={signInWithGoogle}>Sign In</button>
         <Switch>
           <Route exact path="/">
             <Redirect to="/" />
@@ -32,6 +37,11 @@ function App() {
               <Transactions />
             </div>
           </Route>
+          <Route path="/budget">
+            <div>
+              <Budget />
+            </div>
+          </Route>
         </Switch>
       </AppContainer>
     </Router>
@@ -39,7 +49,7 @@ function App() {
 }
 
 const AppContainer = styled.div`
-  height: 100vh;
+  height: 100%;
   background-color: black;
 `;
 

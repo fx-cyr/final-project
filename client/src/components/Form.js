@@ -16,15 +16,13 @@ const Form = ({ showModal, setShowModal, allTransactions }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  console.log(expenseCategory);
-
   const handleChange = (state, ev) => {
     state(ev.target.value);
   };
 
   const handleSubmit = () => {
     setIsFormValid(true);
-    fetch("api/transactions", {
+    fetch("/api/transactions", {
       method: "post",
       body: JSON.stringify({
         type: type,

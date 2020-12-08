@@ -16,6 +16,11 @@ export const Header = () => {
       <RightNavBar>
         <StyledUL>
           <StyledLI>
+            <StyledNavLink to={"/budget"} aria-label="Link to budget">
+              Budget
+            </StyledNavLink>
+          </StyledLI>
+          <StyledLI>
             <StyledNavLink
               to={"/transactions"}
               aria-label="Link to transactions"

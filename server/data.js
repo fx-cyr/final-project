@@ -1,3 +1,4 @@
 const transactions = [];
+const budget = [];
 
-module.exports = { transactions };
+module.exports = { transactions, budget };

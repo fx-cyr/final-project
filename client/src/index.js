@@ -5,6 +5,7 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { transactionsReducer } from "./transactionReducer";
 import { TransactionProvider } from "./contexts/transactionContext";
+import { BudgetProvider } from "./contexts/budgetContext";
 
 const store = createStore(
   transactionsReducer,
@@ -13,11 +14,13 @@ const store = createStore(
 
 ReactDOM.render(
   <React.StrictMode>
-    <TransactionProvider>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </TransactionProvider>
+    <BudgetProvider>
+      <TransactionProvider>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </TransactionProvider>
+    </BudgetProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
