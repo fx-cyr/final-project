@@ -2,78 +2,56 @@ import React from "react";
 import styled from "styled-components";
 import { useTransaction } from "../../contexts/transactionContext";
 import { useBudget } from "../../contexts/budgetContext";
-import { PieChart, Pie, Sector, Cell, Tooltip } from "recharts";
+import PlannedMonthly from "./PlannedMonthly";
+import ActualMonthly from "./ActualMonthly";
 import { colorSet } from "../../styles/Colors";
 
 const Dashboard = () => {
   const { allTransactions } = useTransaction();
   const { userBudget } = useBudget();
-  const transactionArr = allTransactions.map((transaction) => {
-    if (transaction.type === "income") {
-      return transaction.amount * 1;
-    } else {
-      return transaction.amount * -1;
-    }
+
+  const decemberTransaction = allTransactions.filter((transaction) => {
+    return transaction.date.includes("2020-12");
   });
 
-  const totalTransaction = transactionArr.reduce((a, b) => a + b, 0);
+  const januaryTransaction = allTransactions.filter((transaction) => {
+    return transaction.date.includes("2021-01");
+  });
 
   return (
     <Wrapper>
       <Title>OVERVIEW</Title>
-      <ChartsContainer>
-        {userBudget.map((budget) => {
-          const budgetExpenses =
-            Number(budget.housing) +
-            Number(budget.transportation) +
-            Number(budget.food) +
-            Number(budget.utilities) +
-            Number(budget.medical) +
-            Number(budget.personal) +
-            Number(budget.leasure) +
-            Number(budget.other);
-          const budgetPieData = [
-            { name: "Expenses", value: budgetExpenses },
-            {
-              name: "Savings",
-              value: Number(budget.plannedIncome) - budgetExpenses,
-            },
-          ];
-          return (
-            <PlannedBox>
-              <PlannedTitle>
-                Planned for <Capitalize>{budget.month}</Capitalize>
-              </PlannedTitle>
-              <PieChart width={300} height={300}>
-                <Pie
-                  dataKey="value"
-                  nameKey="name"
-                  isAnimationActive={false}
-                  data={budgetPieData}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill={colorSet.primaryYellow}
-                  label={(budgetPieData) => budgetPieData.name}
-                />
-                <Tooltip />
-              </PieChart>
-              <PlannedDesc>Income: ${Number(budget.plannedIncome)}</PlannedDesc>
-              <PlannedDesc>
-                Expenses: $
-                {Number(budget.housing) +
-                  Number(budget.transportation) +
-                  Number(budget.food) +
-                  Number(budget.utilities) +
-                  Number(budget.medical) +
-                  Number(budget.personal) +
-                  Number(budget.leasure) +
-                  Number(budget.other)}
-              </PlannedDesc>
-            </PlannedBox>
-          );
-        })}
-      </ChartsContainer>
+      <ChartWrapper>
+        <Title>December 🎄</Title>
+        <ChartsContainer>
+          {userBudget.map((budget) => {
+            if (budget.month === "december") {
+              return (
+                <>
+                  <PlannedMonthly budget={budget} />
+                  <ActualMonthly transactions={decemberTransaction} />
+                </>
+              );
+            }
+          })}
+        </ChartsContainer>
+      </ChartWrapper>
+
+      <ChartWrapper>
+        <Title>January ☃️</Title>
+        <ChartsContainer>
+          {userBudget.map((budget) => {
+            if (budget.month === "january") {
+              return (
+                <>
+                  <PlannedMonthly budget={budget} />
+                  <ActualMonthly transactions={januaryTransaction} />
+                </>
+              );
+            }
+          })}
+        </ChartsContainer>
+      </ChartWrapper>
     </Wrapper>
   );
 };
@@ -88,31 +66,19 @@ const Wrapper = styled.div`
 
 const Title = styled.h1`
   font-size: 28px;
-`;
-
-const PlannedBox = styled.div`
-  margin: 15px;
-  padding: 5px 10px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const PlannedTitle = styled.div`
-  font-size: 24px;
-`;
-
-const PlannedDesc = styled.div`
-  font-size: 18px;
-`;
-
-const Capitalize = styled.span`
-  text-transform: capitalize;
+  text-align: center;
 `;
 
 const ChartsContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const ChartWrapper = styled.div`
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid ${colorSet.primaryGrey};
 `;
 
 export default Dashboard;
