@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { colorSet } from "../styles/Colors.js";
 import logo from "../assets/savester_logo.png";
+import { useAuth } from "../contexts/authContext";
 
-export const Header = () => {
+export const Header = ({ month }) => {
+  const { logout } = useAuth();
+  const [errorMsg, setErrorMsg] = useState("");
+  const handleLogout = async () => {
+    setErrorMsg("");
+    try {
+      await logout();
+    } catch (err) {
+      console.log(err.stack);
+      setErrorMsg("logout_failed");
+    }
+  };
   return (
     <HeaderWrapper>
+      {errorMsg && window.alert(errorMsg)}
       <LeftHeaderContainer>
         <div>
           <CompanyName>Savester</CompanyName>
@@ -29,14 +42,15 @@ export const Header = () => {
             </StyledNavLink>
           </StyledLI>
           <StyledLI>
-            <StyledNavLink exact to="/dashboard" aria-label="Link to dashboard">
+            <StyledNavLink
+              to={`/dashboard/${month}`}
+              aria-label="Link to dashboard"
+            >
               Dashboard
             </StyledNavLink>
           </StyledLI>
           <StyledLI>
-            <StyledNavLink exact to="/profile" aria-label="Link to profile">
-              Profile
-            </StyledNavLink>
+            <SubmitBtn onClick={handleLogout}>Sign out</SubmitBtn>
           </StyledLI>
         </StyledUL>
       </RightNavBar>
@@ -87,6 +101,7 @@ const StyledNavLink = styled(NavLink)`
 const StyledUL = styled.ul`
   list-style: none;
   display: flex;
+  align-items: baseline;
 `;
 const StyledLI = styled.li`
   transition: all 0.2s ease-in-out;
@@ -100,6 +115,19 @@ const StyledLI = styled.li`
 const Logo = styled.img`
   width: 50px;
   margin-left: 20px;
+`;
+
+const SubmitBtn = styled.button`
+  margin-bottom: 5px;
+  color: white;
+  font-size: 18px;
+  border: 2px solid ${colorSet.primaryYellow};
+  background: transparent;
+
+  &:hover {
+    background-color: ${colorSet.primaryYellow};
+    cursor: pointer;
+  }
 `;
 
 export default Header;

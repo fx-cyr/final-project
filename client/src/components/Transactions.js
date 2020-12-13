@@ -24,19 +24,11 @@ const Transactions = () => {
     <Wrapper>
       <ActionContainer>
         <Action>
-          <ActionTitle>Add Expense</ActionTitle>
+          <ActionTitle>Add Transaction</ActionTitle>
           <MdAddCircleOutline
             size={40}
-            style={{ color: "#F94144", cursor: "pointer" }}
+            style={{ color: `${colorSet.primaryYellow}`, cursor: "pointer" }}
             onClick={handleAddExpense}
-          />
-        </Action>
-        <Action>
-          <ActionTitle>Add Income</ActionTitle>
-          <MdAddCircleOutline
-            size={40}
-            style={{ color: "#90BE6D", cursor: "pointer" }}
-            onClick={handleAddIncome}
           />
         </Action>
       </ActionContainer>
@@ -85,6 +77,7 @@ const Action = styled.div`
 const ActionTitle = styled.h2`
   color: white;
   padding-bottom: 5px;
+  font-size: 28px;
 `;
 
 const Title = styled.h1`

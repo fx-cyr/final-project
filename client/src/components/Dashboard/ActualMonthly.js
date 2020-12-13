@@ -2,8 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Sector, Cell, Tooltip } from "recharts";
 import { colorSet } from "../../styles/Colors";
+import { useHistory } from "react-router-dom";
 
 const ActualMonthly = ({ transactions }) => {
+  const history = useHistory();
   let actualIncome = [];
   let actualExpenses = [];
 
@@ -29,7 +31,7 @@ const ActualMonthly = ({ transactions }) => {
   return (
     <PlannedBox>
       <PlannedTitle>ACTUAL</PlannedTitle>
-      <PieChart width={300} height={300}>
+      <PieChart width={500} height={300}>
         <Pie
           dataKey="value"
           nameKey="name"
@@ -43,25 +45,29 @@ const ActualMonthly = ({ transactions }) => {
         />
         <Tooltip />
       </PieChart>
-      <PlannedDesc>Income: ${sumActualIncome}</PlannedDesc>
+      <PlannedDesc>Income: ${sumActualIncome.toFixed(2)}</PlannedDesc>
       <PlannedDesc>
-        Expenses: {(sumActualExpenses / sumActualIncome) * 100}%
+        Expenses: {((sumActualExpenses / sumActualIncome) * 100).toFixed(2)}%
       </PlannedDesc>
       <PlannedDesc>
         Savings:{" "}
-        {((sumActualIncome - sumActualExpenses) / sumActualIncome) * 100}%
+        {(
+          ((sumActualIncome - sumActualExpenses) / sumActualIncome) *
+          100
+        ).toFixed(2)}
+        %
       </PlannedDesc>
     </PlannedBox>
   );
 };
 
 const PlannedBox = styled.div`
-  margin: 15px;
-  padding: 5px 10px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  padding: 5px 10px;
 `;
-
 const PlannedTitle = styled.div`
   font-size: 24px;
   text-align: center;
@@ -69,6 +75,19 @@ const PlannedTitle = styled.div`
 
 const PlannedDesc = styled.div`
   font-size: 18px;
+  padding: 7px 0;
+`;
+
+const AddBtn = styled.button`
+  margin-top: 20px;
+  color: white;
+  width: 150px;
+  background-color: transparent;
+  border: 1px solid ${colorSet.primaryRed};
+  &:hover {
+    background-color: ${colorSet.primaryRed};
+    cursor: pointer;
+  }
 `;
 
 export default ActualMonthly;

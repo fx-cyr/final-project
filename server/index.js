@@ -3,26 +3,34 @@ const app = express();
 const PORT = 9414;
 const bodyParser = require("body-parser");
 const {
-  getAllTransactions,
-  addTransaction,
-  getBudget,
-  addBudget,
+  dbAddTransaction,
+  dbGetAllTransaction,
+  dbAddBudget,
+  dbGetAllBudget,
+  dbDeleteTransaction,
+  dbUpdateBudget,
 } = require("./handlers");
 const { transactions } = require("./data");
 
 app.use(bodyParser.json());
 
-// Endpoint that adds a transaction 👇
-app.post("/api/transactions", addTransaction);
+// Endpoint that adds a transaction TO THE DATABASE 👇
+app.post("/api/db/transaction", dbAddTransaction);
 
-// Endpoint that retrieves all transactions 👇
-app.get("/api/transactions", getAllTransactions);
+// Endpoint that deletes a transaction FROM THE DATABASE 👇
+app.delete("/api/db/transaction/:_id", dbDeleteTransaction);
 
-// Endpoint that retrieves the user budget👇
-app.get("/api/budget", getBudget);
+// Endpoint that retrieves all user transactions FROM DATABASE 👇
+app.get("/api/db/transaction/:email", dbGetAllTransaction);
 
-// Endpoint that retrieves adds budget 👇
-app.post("/api/budget", addBudget);
+// Endpoint that adds a budget TO THE DATABASE 👇
+app.post("/api/db/budget", dbAddBudget);
+
+// Endpoint that retrieves all user budgets FROM DATABASE 👇
+app.get("/api/db/budget/:email", dbGetAllBudget);
+
+// Endpoint that deletes a user budget FROM DATABASE 👇
+app.delete("/api/db/budget/:_id", dbUpdateBudget);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);

@@ -4,11 +4,10 @@ import { expenseCategories } from "../data";
 import { transactionType } from "../data";
 import { colorSet } from "../styles/Colors";
 import Modal from "react-modal";
-import { addTransactionItem } from "../actions";
-import { useDispatch } from "react-redux";
+import { useAuth } from "../contexts/authContext";
 
 const Form = ({ showModal, setShowModal, allTransactions }) => {
-  const dispatch = useDispatch();
+  const { currentUser } = useAuth();
   const [type, setType] = useState(null);
   const [expenseCategory, setExpenseCategory] = useState("");
   const [expenseAmount, setExpenseAmount] = useState(0);
@@ -22,9 +21,10 @@ const Form = ({ showModal, setShowModal, allTransactions }) => {
 
   const handleSubmit = () => {
     setIsFormValid(true);
-    fetch("/api/transactions", {
+    fetch("/api/db/transaction", {
       method: "post",
       body: JSON.stringify({
+        userEmail: currentUser.email,
         type: type,
         amount: expenseAmount,
         category: expenseCategory,
