@@ -1,46 +1,21 @@
 "use strict";
 const admin = require("firebase-admin");
+const { MongoClient, ObjectId } = require("mongodb");
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
 
+const assert = require("assert");
 require("dotenv").config();
-
-console.log(process.env.FIREBASE_PROJECT_ID);
-
-admin.initializeApp({
-  credential: admin.credential.cert({
-    type: "service_account",
-    project_id: process.env.FIREBASE_PROJECT_ID,
-    private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    client_id: process.env.FIREBASE_CLIENT_ID,
-    auth_uri: "https://accounts.google.com/o/oauth2/auth",
-    token_uri: "https://oauth2.googleapis.com/token",
-    auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-    client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT,
-  }),
-  databaseURL: process.env.FB_DATABASE_URL,
-});
+const { MONGO_URI } = process.env;
+console.log(MONGO_URI);
 
 const { v4: uuidv4 } = require("uuid");
 const { transactions, budget } = require("./data");
 
-// Handler function for the endpoint that retrieves all transaction 👇
-const getAllTransactions = (req, res) => {
-  if (transactions.length > 0) {
-    res.status(200).json({
-      status: 200,
-      data: transactions,
-    });
-  } else {
-    res.status(404).json({
-      status: 404,
-      message: "No transactions",
-    });
-  }
-};
-
-// Handler function for the endpoint that adds a transaction 👇
-const addTransaction = (req, res) => {
+// Handler function for the endpoint that adds a user transaction to collection transactions👇
+const dbAddTransaction = async (req, res) => {
   const { id, amount, category, date } = req.body;
   if (amount === undefined || category === undefined || date === undefined) {
     res.status(400).json({
@@ -48,21 +23,85 @@ const addTransaction = (req, res) => {
       data: req.body,
       message: "Missing information - transaction not processed",
     });
+    return;
   }
-  let data = req.body;
-  data.id = uuidv4();
-  transactions.push(data);
-  res.status(201).json({
-    status: 201,
-    data: data,
-    message: "Transaction successfully added!",
-  });
+  const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("savester");
+    const result = await db.collection("transactions").insertOne(req.body);
+    assert.strictEqual(1, result.insertedCount);
+    if (result) {
+      return res.status(201).json({
+        status: 201,
+        data: req.body,
+      });
+    }
+    return res.status(500).json({
+      status: 500,
+      message: "Failed request to add transaction",
+    });
+  } catch (err) {
+    console.log(err.stack);
+  }
+  client.close();
 };
 
-// Handler function for the endpoint that adds a budget 👇
-const addBudget = (req, res) => {
+// Handler function for the endpoint that deletes a user transaction 👇
+const dbDeleteTransaction = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const client = await MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("savester");
+    await db.collection("transactions").deleteOne({ _id: ObjectId(_id) });
+
+    return res.status(200).json({
+      status: 200,
+      message: `${_id} successfully deleted`,
+      data: { _id: _id },
+    });
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to delete",
+    });
+  }
+};
+
+// Handler function for the endpoint that retrieves all the user transactions 👇
+const dbGetAllTransaction = async (req, res) => {
+  const { email } = req.params;
+  const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("savester");
+    const result = await db
+
+      .collection("transactions")
+      .find({ userEmail: email })
+      .toArray();
+    if (result.length > 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "Transactions retrieved",
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "No transactions retrieved",
+      });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+// Handler function for the endpoint that adds a budget TO DATABASE 👇
+const dbAddBudget = async (req, res) => {
   const {
-    id,
     housing,
     transportation,
     food,
@@ -92,29 +131,86 @@ const addBudget = (req, res) => {
       message:
         "Missing information - fill out every field of the budget. If you're not budgeting for a specific catgeory, input 0.",
     });
+    return;
   }
-  let data = req.body;
-  budget.push(data);
-  res.status(201).json({
-    status: 201,
-    data: data,
-    message: "Budget successfully set!",
-  });
+  const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("savester");
+    const result = await db.collection("budgets").insertOne(req.body);
+    assert.strictEqual(1, result.insertedCount);
+    if (result) {
+      return res.status(201).json({
+        status: 201,
+        data: req.body,
+      });
+    }
+    return res.status(500).json({
+      status: 500,
+      message: "Failed request to add budget",
+    });
+  } catch (err) {
+    console.log(err.stack);
+  }
+  client.close();
 };
 
-const getBudget = (req, res) => {
-  if (budget.length > 0) {
-    res.status(200).json({
+// Handler function for the endpoint that retrieves all user budgets FROM DATABASE 👇
+const dbGetAllBudget = async (req, res) => {
+  const { email } = req.params;
+  const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("savester");
+    const result = await db
+      .collection("budgets")
+      .find({ userEmail: email })
+      .toArray();
+    if (result.length > 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "Budgets retrieved",
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "No budget retrieved",
+      });
+    }
+  } catch (err) {
+    console.log(err.stack);
+  }
+};
+
+// Handler function for the endpoint that deletes a user budget FROM DATABASE 👇
+const dbUpdateBudget = async (req, res) => {
+  const { _id } = req.params;
+  try {
+    const client = await MongoClient(MONGO_URI, options);
+    await client.connect();
+    const db = client.db("savester");
+    await db.collection("budgets").deleteOne({ _id: ObjectId(_id) });
+
+    return res.status(200).json({
       status: 200,
-      data: budget,
-      message: "Budget retrieved",
+      message: `${_id} successfully deleted`,
+      data: { _id: _id },
     });
-  } else {
-    res.status(404).json({
-      status: 404,
-      message: "No budget was found",
+  } catch (err) {
+    console.log(err.stack);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to delete",
     });
   }
 };
 
-module.exports = { getAllTransactions, addTransaction, addBudget, getBudget };
+module.exports = {
+  dbAddTransaction,
+  dbGetAllTransaction,
+  dbAddBudget,
+  dbGetAllBudget,
+  dbDeleteTransaction,
+  dbUpdateBudget,
+};

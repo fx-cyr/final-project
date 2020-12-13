@@ -51,7 +51,7 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-body {
+body, input, button {
     font-family: 'Share Tech Mono', monospace;
 }
 `;

@@ -1,26 +1,29 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-
-export const BudgetContext = createContext({ userbudget: [] });
+import { useAuth } from "./authContext";
+export const BudgetContext = createContext({ userBudget: [] });
 
 export const BudgetProvider = ({ children }) => {
+  const { currentUser } = useAuth();
   const [userBudget, setUserBudget] = useState([]);
 
   useEffect(() => {
-    fetch("/api/budget", {
-      method: "get",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => {
-        return res.json();
+    if (currentUser) {
+      fetch(`/api/db/budget/${currentUser.email}`, {
+        method: "get",
+        headers: { "Content-Type": "application/json" },
       })
-      .then((json) => {
-        if (json.data) {
-          setUserBudget(json.data);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          return res.json();
+        })
+        .then((json) => {
+          if (json.data) {
+            setUserBudget(json.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [setUserBudget]);
 
   return (

@@ -3,8 +3,10 @@ import styled from "styled-components";
 import { colorSet } from "../../styles/Colors";
 import { useBudget } from "../../contexts/budgetContext";
 import { months } from "../../data";
+import { useAuth } from "../../contexts/authContext";
 
 const Budget = () => {
+  const { currentUser } = useAuth();
   const { userBudget } = useBudget();
   const [isFormValid, setIsFormValid] = useState(false);
   const [budgetMonth, setBudgetMonth] = useState("");
@@ -25,9 +27,10 @@ const Budget = () => {
 
   const handleSubmit = () => {
     setIsFormValid(true);
-    fetch("/api/budget", {
+    fetch("/api/db/budget", {
       method: "post",
       body: JSON.stringify({
+        userEmail: currentUser.email,
         housing: budgetHousing,
         transportation: budgetTransportation,
         food: budgetFood,
@@ -103,31 +106,14 @@ const Budget = () => {
 
   return (
     <Wrapper>
-      <Title>Plan your expenses</Title>
-      <Description>
-        Allocate money on each expense these expense categories! If you're not
-        planning on allocating money for a specific expense, fill the field with
-        a big 0.
-      </Description>
+      <Title>CREATE A BUDGET</Title>
       <FormWrapper>
-        {/* DRY VERSION FOR FORM LOGIC 👇 */}
-
-        {/* {expenseCategories.map((expense) => {
-          let budgetSetter = expense.setter;
-          return (
-            <Label>
-              {expense.name} ($):{" "}
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-               onChange={(ev) => { 
-                  handleChange(budgetSetter, ev);
-                }}
-              />{" "}
-            </Label>
-          );
-        })} */}
+        <Subtitle>Plan your expenses</Subtitle>
+        <Description>
+          Allocate money on each expense these expense categories! If you're not
+          planning on allocating money for a specific expense, fill the field
+          with a big 0.
+        </Description>
         <CategoryContainer>
           <Label for="categories">
             Choose month:
@@ -136,7 +122,9 @@ const Budget = () => {
                 handleChange(setBudgetMonth, ev);
               }}
             >
-              <option disabled>Select month</option>
+              <option selected="true" disabled>
+                Select month
+              </option>
               {months.map((month) => {
                 return <option value={`${month.id}`}>{month.name}</option>;
               })}
@@ -148,8 +136,8 @@ const Budget = () => {
         {/* Housing setter  👇*/}
         <CategoryContainer>
           <Label>
-            Housing ($):{" "}
             <input
+              placeholder="Housing ($)"
               type="number"
               min="0"
               step="0.01"
@@ -164,8 +152,8 @@ const Budget = () => {
         {/* Transportation setter  👇*/}
         <CategoryContainer>
           <Label>
-            Transportation ($):{" "}
             <input
+              placeholder="Transportation ($)"
               type="number"
               min="0"
               step="0.01"
@@ -180,8 +168,8 @@ const Budget = () => {
         {/* Food setter  👇*/}
         <CategoryContainer>
           <Label>
-            Food ($):{" "}
             <input
+              placeholder="Food ($)"
               type="number"
               min="0"
               step="0.01"
@@ -196,8 +184,8 @@ const Budget = () => {
         {/* Utilities setter  👇*/}
         <CategoryContainer>
           <Label>
-            Utilities ($):{" "}
             <input
+              placeholder="Utilities ($)"
               type="number"
               min="0"
               step="0.01"
@@ -212,8 +200,8 @@ const Budget = () => {
         {/* Medical setter  👇*/}
         <CategoryContainer>
           <Label>
-            Medical ($):{" "}
             <input
+              placeholder="Medical ($)"
               type="number"
               min="0"
               step="0.01"
@@ -222,13 +210,14 @@ const Budget = () => {
               }}
             />{" "}
           </Label>
+          <BudgetDisplay>${budgetMedical}</BudgetDisplay>
         </CategoryContainer>
 
         {/* Personal setter  👇*/}
         <CategoryContainer>
           <Label>
-            Personal ($):{" "}
             <input
+              placeholder="Personal ($)"
               type="number"
               min="0"
               step="0.01"
@@ -243,8 +232,8 @@ const Budget = () => {
         {/* Leasure setter  👇*/}
         <CategoryContainer>
           <Label>
-            Leasure ($):{" "}
             <input
+              placeholder="Leasure ($)"
               type="number"
               min="0"
               step="0.01"
@@ -259,8 +248,8 @@ const Budget = () => {
         {/* Other setter  👇*/}
         <CategoryContainer>
           <Label>
-            Other ($):{" "}
             <input
+              placeholder="Other ($)"
               type="number"
               min="0"
               step="0.01"
@@ -280,28 +269,20 @@ const Budget = () => {
           <ErrorBox>Please enter the month you want to budget for</ErrorBox>
         )}
 
-        <Title>Plan your expenses</Title>
-        <Description>
-          Allocate money on each expense these expense categories! If you're not
-          planning on allocating money for a specific expense, fill the field
-          with a big 0.
-        </Description>
-        <FormWrapper>
-          <CategoryContainer>
-            <Label>
-              Planned monthly income ($):{" "}
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                onChange={(ev) => {
-                  handleChange(setPlannedIncome, ev);
-                }}
-              />{" "}
-            </Label>
-            <BudgetDisplay>${plannedIncome}</BudgetDisplay>
-          </CategoryContainer>
-        </FormWrapper>
+        <CategoryContainer>
+          <Label>
+            <input
+              placeholder="Income ($)"
+              type="number"
+              min="0"
+              step="0.01"
+              onChange={(ev) => {
+                handleChange(setPlannedIncome, ev);
+              }}
+            />{" "}
+          </Label>
+          <BudgetDisplay>${plannedIncome}</BudgetDisplay>
+        </CategoryContainer>
 
         <Button type="submit" onClick={checkIfValid}>
           Submit
@@ -312,6 +293,8 @@ const Budget = () => {
 };
 
 const Wrapper = styled.div`
+  background-color: black;
+  height: 100%;
   margin: 5px;
   display: flex;
   flex-direction: column;
@@ -321,8 +304,16 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
+  font-weight: bold;
   font-size: 32px;
   margin: 30px 0;
+  color: ${colorSet.primaryYellow};
+`;
+
+const Subtitle = styled.h3`
+  font-size: 26px;
+  margin: 30px 0;
+  color: ${colorSet.primaryYellow};
 `;
 
 const Description = styled.p`
@@ -333,10 +324,12 @@ const Description = styled.p`
 `;
 
 const FormWrapper = styled.form`
-  margin: 10px 0;
+  padding: 0 15px;
+  border: 2px solid ${colorSet.primaryGrey};
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
-  align-items: left;
+  align-items: center;
 `;
 
 const Label = styled.label`

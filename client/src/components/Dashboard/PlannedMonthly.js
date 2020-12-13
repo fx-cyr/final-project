@@ -2,8 +2,23 @@ import React from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Sector, Cell, Tooltip } from "recharts";
 import { colorSet } from "../../styles/Colors";
+import { useHistory } from "react-router-dom";
 
 const PlannedMonthly = ({ budget }) => {
+  const history = useHistory();
+  const handleBudgetDeletion = () => {
+    fetch(`/api/db/budget/${budget._id}`, {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    window.alert(
+      `Budget for ${budget.month} succesfully deleted! Refresh the page to see changes`
+    );
+    history.push("/budget");
+  };
+
   const budgetExpenses =
     Number(budget.housing) +
     Number(budget.transportation) +
@@ -37,24 +52,31 @@ const PlannedMonthly = ({ budget }) => {
         />
         <Tooltip />
       </PieChart>
-      <PlannedDesc>Income: ${Number(budget.plannedIncome)}</PlannedDesc>
       <PlannedDesc>
-        Expenses: {(budgetExpenses / budget.plannedIncome) * 100}%
+        Income: ${Number(budget.plannedIncome).toFixed(2)}
+      </PlannedDesc>
+      <PlannedDesc>
+        Expenses: {((budgetExpenses / budget.plannedIncome) * 100).toFixed(2)}%
       </PlannedDesc>
       <PlannedDesc>
         Savings:{" "}
-        {((budget.plannedIncome - budgetExpenses) / budget.plannedIncome) * 100}{" "}
+        {(
+          ((budget.plannedIncome - budgetExpenses) / budget.plannedIncome) *
+          100
+        ).toFixed(2)}
         %
       </PlannedDesc>
+      <DeleteBtn onClick={handleBudgetDeletion}>Delete budget</DeleteBtn>
     </PlannedBox>
   );
 };
 
 const PlannedBox = styled.div`
-  margin: 15px;
-  padding: 5px 10px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  padding: 5px 10px;
 `;
 
 const PlannedTitle = styled.div`
@@ -64,6 +86,19 @@ const PlannedTitle = styled.div`
 
 const PlannedDesc = styled.div`
   font-size: 18px;
+  padding: 7px 0;
+`;
+
+const DeleteBtn = styled.button`
+  margin-top: 20px;
+  color: white;
+  width: 150px;
+  background-color: transparent;
+  border: 1px solid ${colorSet.primaryRed};
+  &:hover {
+    background-color: ${colorSet.primaryRed};
+    cursor: pointer;
+  }
 `;
 
 export default PlannedMonthly;

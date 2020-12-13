@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Header from "./Header";
 import { GlobalStyles } from "../styles/GlobalStyles";
 import { colorSet } from "../styles/Colors";
@@ -11,35 +11,47 @@ import {
 } from "react-router-dom";
 import Transactions from "./Transactions";
 import Dashboard from "./Dashboard";
-import { FirebaseContext } from "../contexts/firebaseContext";
-import { app } from "firebase";
 import Budget from "./Budget";
+import Signup from "./Auth/Signup";
+import Login from "./Auth/Login";
+import { useAuth } from "../contexts/authContext";
 
 function App() {
-  const { signInWithGoogle } = useContext(FirebaseContext);
+  const [month, setMonth] = useState("");
+  const { currentUser } = useAuth();
+  console.log(currentUser);
   return (
     <Router>
       <GlobalStyles />
       <AppContainer>
-        <Header />
-        <button onClick={signInWithGoogle}>Sign In</button>
+        <Header month={month} />
         <Switch>
           <Route exact path="/">
-            <Redirect to="/" />
+            <Redirect to="/dashboard" />
           </Route>
           <Route path="/dashboard">
             <div>
-              <Dashboard />
+              {currentUser ? (
+                <Dashboard month={month} setMonth={setMonth} />
+              ) : (
+                <Login />
+              )}
             </div>
           </Route>
           <Route path="/transactions">
-            <div>
-              <Transactions />
-            </div>
+            <div>{currentUser ? <Transactions /> : <Login />}</div>
           </Route>
           <Route path="/budget">
+            <div>{currentUser ? <Budget /> : <Login />}</div>
+          </Route>
+          <Route path="/signup">
             <div>
-              <Budget />
+              <Signup />
+            </div>
+          </Route>
+          <Route path="/login">
+            <div>
+              <Login />
             </div>
           </Route>
         </Switch>
@@ -49,7 +61,6 @@ function App() {
 }
 
 const AppContainer = styled.div`
-  height: 100%;
   background-color: black;
 `;
 
