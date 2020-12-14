@@ -6,7 +6,12 @@ import { colorSet } from "../styles/Colors";
 import Modal from "react-modal";
 import { useAuth } from "../contexts/authContext";
 
-const Form = ({ showModal, setShowModal, allTransactions }) => {
+const Form = ({
+  showModal,
+  setShowModal,
+  allTransactions,
+  setAllTransactions,
+}) => {
   const { currentUser } = useAuth();
   const [type, setType] = useState(null);
   const [expenseCategory, setExpenseCategory] = useState("");
@@ -39,7 +44,8 @@ const Form = ({ showModal, setShowModal, allTransactions }) => {
         return res.json();
       })
       .then((data) => {
-        allTransactions.push(data);
+        console.log(data);
+        setAllTransactions([data.data, ...allTransactions]);
       })
       .catch((err) => {
         console.log(err);

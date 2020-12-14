@@ -13,6 +13,7 @@ const TransactionItem = ({ item }) => {
     });
     window.alert("Transaction deleted");
   };
+  console.log(item);
   return (
     <Wrapper>
       <BtnWrapper>

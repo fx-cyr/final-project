@@ -6,4 +6,5 @@ export const colorSet = {
   primaryRed: "#F94144",
   primaryGreen: "#90BE6D",
   primaryWhite: "#FFFFFF",
+  primaryBlue: "#219ebc",
 };
