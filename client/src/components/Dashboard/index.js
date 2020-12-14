@@ -4,6 +4,7 @@ import { useTransaction } from "../../contexts/transactionContext";
 import { useBudget } from "../../contexts/budgetContext";
 import PlannedMonthly from "./PlannedMonthly";
 import ActualMonthly from "./ActualMonthly";
+import BudgetExpenses from "./BudgetExpenses";
 import { colorSet } from "../../styles/Colors";
 import { useHistory } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -69,246 +70,264 @@ const Dashboard = ({ month, setMonth }) => {
   });
 
   return (
-    <Wrapper>
-      <SidebarWrapper>
-        <Sidebar setMonth={setMonth} />
-      </SidebarWrapper>
-      <DashboardWrapper>
-        {month === "" && <Title>Select a month</Title>}
-        {month === "2020-12" && (
-          <ChartWrapper>
-            <Title>December 2020</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2020-12") {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={dec2020Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
-        {month === "2021-01" && (
-          <ChartWrapper>
-            <Title>January 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-01" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={jan2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+    <>
+      {allTransactions && (
+        <Wrapper>
+          <SidebarWrapper>
+            <Sidebar setMonth={setMonth} />
+          </SidebarWrapper>
+          <DashboardWrapper>
+            {month === "" && <Title>Select a month</Title>}
+            {month === "2020-12" && (
+              <ChartWrapper>
+                <Title>December 2020</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2020-12") {
+                    return (
+                      <ChartWrapper>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={dec2020Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </ChartWrapper>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
+            {month === "2021-01" && (
+              <ChartWrapper>
+                <Title>January 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-01" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={jan2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-02" && (
-          <ChartWrapper>
-            <Title>February 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-02" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={feb2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-02" && (
+              <ChartWrapper>
+                <Title>February 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-02" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={feb2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-03" && (
-          <ChartWrapper>
-            <Title>March 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-03" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={mar2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-03" && (
+              <ChartWrapper>
+                <Title>March 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-03" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={mar2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-04" && (
-          <ChartWrapper>
-            <Title>April 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-04") {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={apr2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-04" && (
+              <ChartWrapper>
+                <Title>April 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-04") {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={apr2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-05" && (
-          <ChartWrapper>
-            <Title>May 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-05" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={may2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-05" && (
+              <ChartWrapper>
+                <Title>May 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-05" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={may2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-06" && (
-          <ChartWrapper>
-            <Title>June 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-06" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={jun2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-06" && (
+              <ChartWrapper>
+                <Title>June 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-06" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={jun2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-07" && (
-          <ChartWrapper>
-            <Title>July 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-07" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={jul2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-07" && (
+              <ChartWrapper>
+                <Title>July 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-07" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={jul2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-08" && (
-          <ChartWrapper>
-            <Title>August 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-08" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={aug2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-08" && (
+              <ChartWrapper>
+                <Title>August 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-08" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={aug2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-09" && (
-          <ChartWrapper>
-            <Title>September 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-09" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={sep2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-09" && (
+              <ChartWrapper>
+                <Title>September 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-09" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={sep2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-10" && (
-          <ChartWrapper>
-            <Title>October 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-10" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={oct2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-10" && (
+              <ChartWrapper>
+                <Title>October 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-10" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={oct2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-11" && (
-          <ChartWrapper>
-            <Title>November 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-11" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={nov2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
+            {month === "2021-11" && (
+              <ChartWrapper>
+                <Title>November 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-11" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={nov2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
 
-        {month === "2021-12" && (
-          <ChartWrapper>
-            <Title>December 2021</Title>
-            <ChartsContainer>
-              {userBudget.map((budget) => {
-                if (budget.month === "2021-12" || budget.lenght > 0) {
-                  return (
-                    <>
-                      <PlannedMonthly budget={budget} />
-                      <ActualMonthly transactions={dec2021Trans} />
-                    </>
-                  );
-                }
-              })}
-            </ChartsContainer>
-          </ChartWrapper>
-        )}
-      </DashboardWrapper>
-    </Wrapper>
+            {month === "2021-12" && (
+              <ChartWrapper>
+                <Title>December 2021</Title>
+                {userBudget.map((budget) => {
+                  if (budget.month === "2021-12" || budget.lenght > 0) {
+                    return (
+                      <>
+                        <ChartsContainer>
+                          <PlannedMonthly budget={budget} />
+                          <ActualMonthly transactions={dec2021Trans} />
+                        </ChartsContainer>
+                        <BudgetExpenses budget={budget} />
+                      </>
+                    );
+                  }
+                })}
+              </ChartWrapper>
+            )}
+          </DashboardWrapper>
+        </Wrapper>
+      )}
+      {!allTransactions && <Wrapper>Refresh page!</Wrapper>}
+    </>
   );
 };
 
@@ -335,6 +354,7 @@ const DashboardWrapper = styled.div`
 const Title = styled.h1`
   font-size: 28px;
   padding-bottom: 32px;
+  text-transform: uppercase;
 `;
 
 const ChartsContainer = styled.div`
@@ -351,18 +371,4 @@ const ChartWrapper = styled.div`
   margin: 10px;
   padding: 10px;
 `;
-
-const BudgetCreation = styled.button`
-  margin: 5%;
-  color: white;
-  font-size: 18px;
-  border: 2px solid ${colorSet.primaryGreen};
-  background: transparent;
-
-  &:hover {
-    background-color: ${colorSet.primaryGreen};
-    cursor: pointer;
-  }
-`;
-
 export default Dashboard;

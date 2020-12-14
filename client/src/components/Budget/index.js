@@ -260,15 +260,12 @@ const Budget = () => {
           </Label>
           <BudgetDisplay>${budgetOther}</BudgetDisplay>
         </CategoryContainer>
-
-        {errorMsg === "missing_amount" && (
-          <ErrorBox>Please log an amount for all fields.</ErrorBox>
-        )}
-
-        {errorMsg === "missing_month" && (
-          <ErrorBox>Please enter the month you want to budget for</ErrorBox>
-        )}
-
+        <Subtitle>Plan your income</Subtitle>
+        <Description>
+          Bsed on the income your planning in making, your Dashboard will
+          reflect in real time your budget usage and your transactions allocated
+          for each expense category.
+        </Description>
         <CategoryContainer>
           <Label>
             <input
@@ -284,6 +281,11 @@ const Budget = () => {
           <BudgetDisplay>${plannedIncome}</BudgetDisplay>
         </CategoryContainer>
 
+        {errorMsg === "missing_amount" && (
+          <ErrorBox>Please log an amount for all fields.</ErrorBox>
+        )}
+        {errorMsg === "missing_month" && <ErrorBox>Select a month</ErrorBox>}
+        {errorMsg === null && <SuccessBox>Succesfully create!</SuccessBox>}
         <Button type="submit" onClick={checkIfValid}>
           Submit
         </Button>
@@ -300,7 +302,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 10%;
 `;
 
 const Title = styled.h1`
@@ -313,7 +314,7 @@ const Title = styled.h1`
 const Subtitle = styled.h3`
   font-size: 26px;
   margin: 30px 0;
-  color: ${colorSet.primaryYellow};
+  font-weight: bold;
 `;
 
 const Description = styled.p`
@@ -337,19 +338,41 @@ const Label = styled.label`
   padding: 10px;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  margin: 20px;
+  color: white;
+  font-size: 18px;
+  padding: 10px 50px;
+  border: 2px solid ${colorSet.primaryYellow};
+  background: transparent;
+
+  &:hover {
+    background-color: ${colorSet.primaryYellow};
+    cursor: pointer;
+  }
+`;
 
 const ErrorBox = styled.div`
   text-align: center;
-  background-color: #f94144;
+  border: 2px solid #f94144;
   color: white;
   margin: 15px 0;
+  padding: 15px 0;
   width: 50%;
 `;
 
 const BudgetDisplay = styled.div`
   color: ${colorSet.primaryYellow};
   margin-top: 13px;
+`;
+
+const SuccessBox = styled.div`
+  text-align: center;
+  border: 2px solid ${colorSet.primaryGreen};
+  color: white;
+  margin: 15px 0;
+  padding: 15px 0;
+  width: 50%;
 `;
 
 const CategoryContainer = styled.div`

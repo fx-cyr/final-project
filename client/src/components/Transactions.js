@@ -24,7 +24,7 @@ const Transactions = () => {
     <Wrapper>
       <ActionContainer>
         <Action>
-          <ActionTitle>Add Transaction</ActionTitle>
+          <ActionTitle>ADD TRANSACTION</ActionTitle>
           <MdAddCircleOutline
             size={40}
             style={{ color: `${colorSet.primaryYellow}`, cursor: "pointer" }}
@@ -47,6 +47,7 @@ const Transactions = () => {
           setShowModal={setShowModal}
           showModal={showModal}
           allTransactions={allTransactions}
+          setAllTransactions={setAllTransactions}
         />
       )}
     </Wrapper>
@@ -54,16 +55,17 @@ const Transactions = () => {
 };
 
 const Wrapper = styled.div`
+  margin: 5px;
   color: white;
   background-color: black;
   height: 100%;
 `;
 
 const ActionContainer = styled.div`
-  padding: 4% 1%;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 50px;
 `;
 
 const Action = styled.div`
@@ -75,13 +77,15 @@ const Action = styled.div`
 `;
 
 const ActionTitle = styled.h2`
-  color: white;
-  padding-bottom: 5px;
-  font-size: 28px;
+  font-weight: bold;
+  font-size: 32px;
+  margin: 30px 0;
+  color: ${colorSet.primaryYellow};
 `;
 
 const Title = styled.h1`
   font-size: 24px;
+  font-weight: bold;
 `;
 
 const TransactionContainer = styled.div`

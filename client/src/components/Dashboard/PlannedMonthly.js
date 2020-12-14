@@ -37,7 +37,7 @@ const PlannedMonthly = ({ budget }) => {
   ];
   return (
     <PlannedBox>
-      <PlannedTitle>PLANNED</PlannedTitle>
+      <PlannedTitle>Planned</PlannedTitle>
       <PieChart width={300} height={300}>
         <Pie
           dataKey="value"
@@ -50,7 +50,6 @@ const PlannedMonthly = ({ budget }) => {
           fill={colorSet.primaryYellow}
           label={(budgetPieData) => budgetPieData.name}
         />
-        <Tooltip />
       </PieChart>
       <PlannedDesc>
         Income: ${Number(budget.plannedIncome).toFixed(2)}

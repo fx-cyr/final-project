@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { PieChart, Pie, Sector, Cell, Tooltip } from "recharts";
+import { PieChart, Pie } from "recharts";
 import { colorSet } from "../../styles/Colors";
 import { useHistory } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const ActualMonthly = ({ transactions }) => {
 
   return (
     <PlannedBox>
-      <PlannedTitle>ACTUAL</PlannedTitle>
+      <PlannedTitle>Actual</PlannedTitle>
       <PieChart width={500} height={300}>
         <Pie
           dataKey="value"
@@ -43,7 +43,6 @@ const ActualMonthly = ({ transactions }) => {
           fill={colorSet.primaryYellow}
           label={(budgetPieData) => budgetPieData.name}
         />
-        <Tooltip />
       </PieChart>
       <PlannedDesc>Income: ${sumActualIncome.toFixed(2)}</PlannedDesc>
       <PlannedDesc>
